@@ -10,8 +10,7 @@
     <artifactId>ewm-service</artifactId>
     <packaging>jar</packaging>
 
-    <name>main-service</name>
-    <url>http://maven.apache.org</url>
+    <name>Ewm service</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -27,6 +26,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

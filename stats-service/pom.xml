@@ -10,7 +10,7 @@
     <artifactId>stats-service</artifactId>
     <packaging>pom</packaging>
 
-    <name>stat-service</name>
+    <name>stats-service</name>
     <url>http://maven.apache.org</url>
     <modules>
         <module>stats-client</module>
