@@ -29,10 +29,10 @@ public class StatsServiceImpl implements StatsService {
     public List<ViewStatsDto> get(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
         if (uris != null) {
             return (unique) ? statsRepository.findUniqueStats(start, end, uris) :
-                              statsRepository.findStats(start, end, uris);
+                    statsRepository.findStats(start, end, uris);
         } else {
             return (unique) ? statsRepository.findUniqueStats(start, end) :
-                              statsRepository.findStats(start, end);
+                    statsRepository.findStats(start, end);
         }
     }
 }
