@@ -57,7 +57,7 @@ public class ExceptionHandlers {
                 .build();
     }
 
-    @ExceptionHandler({ForbiddenException .class})
+    @ExceptionHandler({ForbiddenException.class})
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ApiError handleForbiddenException(final RuntimeException e) {
         return ApiError.builder()
