@@ -2,6 +2,7 @@ package ru.practicum.participation.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.event.enums.EventState;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.repository.EventRepository;
@@ -27,13 +28,7 @@ public class ParticipationServiceImpl implements ParticipationService {
     private final EventRepository eventRepository;
 
     @Override
-    public List<ParticipationDto> getAll(long userId) {
-        findUserById(userId);
-        return participationRepository.findAllByRequesterId(userId).stream()
-                .map(ParticipationMapper::toDto)
-                .collect(Collectors.toList());
-    }
-
+    @Transactional
     public ParticipationDto create(long userId, long eventId) {
         User requester = findUserById(userId);
         Event event = eventRepository.findById(eventId)
@@ -63,6 +58,8 @@ public class ParticipationServiceImpl implements ParticipationService {
         return ParticipationMapper.toDto(participationRepository.save(participation));
     }
 
+    @Override
+    @Transactional
     public ParticipationDto patch(long userId, long requestId) {
         findUserById(userId);
         Participation participation = participationRepository.findById(requestId)
@@ -75,6 +72,15 @@ public class ParticipationServiceImpl implements ParticipationService {
         participation.setStatus(ParticipationState.CANCELED);
 
         return ParticipationMapper.toDto(participationRepository.save(participation));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ParticipationDto> getAll(long userId) {
+        findUserById(userId);
+        return participationRepository.findAllByRequesterId(userId).stream()
+                .map(ParticipationMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     private User findUserById(long id) {

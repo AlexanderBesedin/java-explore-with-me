@@ -3,9 +3,7 @@ package ru.practicum.event.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.EndpointHitDto;
@@ -246,8 +244,6 @@ public class EventServiceImpl implements EventService {
                                             int from,
                                             int size) {
 
-        Pageable pageable = PageRequest.of(from, size);
-
         if (rangeStart == null) {
             rangeStart = LocalDateTime.now();
         }
@@ -256,9 +252,10 @@ public class EventServiceImpl implements EventService {
             rangeEnd = DateConstant.getMaxDateTime();
         }
 
-        Page<Event> page = eventRepository.findAllByAdmin(users, states, categories, rangeStart, rangeEnd, pageable);
+        List<Event> events = eventRepository.findAllByAdmin(users, states, categories, rangeStart, rangeEnd,
+                PageRequest.of(from, size));
 
-        List<String> eventUrls = page.getContent().stream()
+        List<String> eventUrls = events.stream()
                 .map(event -> "/events/" + event.getId())
                 .collect(Collectors.toList());
 
@@ -267,7 +264,7 @@ public class EventServiceImpl implements EventService {
                 new TypeReference<>() {
                 });
 
-        return page.getContent().stream()
+        return events.stream()
                 .map(EventMapper::toFullDto)
                 .peek(dto -> {
                     Optional<ViewStatsDto> matchingStats = viewStats.stream()
@@ -283,10 +280,7 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional(readOnly = true)
     public List<EventShortDto> getAllByInitiator(long userId, int from, int size) {
-        Pageable pageable = PageRequest.of(from, size);
-        Page<Event> page = eventRepository.findAllByInitiatorId(userId, pageable);
-
-        return page.getContent().stream()
+        return eventRepository.findAllByInitiatorId(userId, PageRequest.of(from, size)).stream()
                 .map(EventMapper::toShortDto)
                 .collect(Collectors.toList());
     }
@@ -400,6 +394,12 @@ public class EventServiceImpl implements EventService {
         if (event.getState() != EventState.PUBLISHED) {
             throw new NotFoundException("Event with id=" + eventId + " was not found");
         }
+        List<String> eventUrls = Collections.singletonList("/events/" + event.getId());
+
+        List<ViewStatsDto> viewStats = objectMapper.convertValue(
+                statsClient.getStats(DateConstant.getMinDateTime(), DateConstant.getMaxDateTime().plusYears(1), eventUrls, true).getBody(),
+                new TypeReference<>() {
+                });
 
         statsClient.addHit(EndpointHitDto.builder()
                 .app("ewm")
@@ -408,12 +408,6 @@ public class EventServiceImpl implements EventService {
                 .timestamp(LocalDateTime.now())
                 .build());
 
-        List<String> eventUrls = Collections.singletonList("/events/" + event.getId());
-
-        List<ViewStatsDto> viewStats = objectMapper.convertValue(
-                statsClient.getStats(DateConstant.getMinDateTime(), DateConstant.getMaxDateTime().plusYears(1), eventUrls, true).getBody(),
-                new TypeReference<>() {
-                });
 
         EventFullDto dto = EventMapper.toFullDto(event);
         dto.setViews(viewStats.isEmpty() ? 0L : viewStats.get(0).getHits());

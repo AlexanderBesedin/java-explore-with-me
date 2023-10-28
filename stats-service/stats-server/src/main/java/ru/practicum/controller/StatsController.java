@@ -9,6 +9,7 @@ import ru.practicum.EndpointHitDto;
 import ru.practicum.ViewStatsDto;
 import ru.practicum.service.StatsService;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class StatsController {
 
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
-    public void add(@RequestBody EndpointHitDto endpointHitDto) {
+    public void add(@Valid @RequestBody EndpointHitDto endpointHitDto) {
         log.info("Entry created {}", endpointHitDto.toString());
         statsService.add(endpointHitDto);
     }

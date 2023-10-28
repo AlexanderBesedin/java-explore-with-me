@@ -27,6 +27,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public CategoryDto patch(long catId, CategoryDto categoryDto) {
         Category category = findById(catId);
         Optional.ofNullable(categoryDto.getName()).ifPresent(category::setName);
@@ -48,6 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public void delete(long catId) {
         findById(catId);
         categoryRepository.deleteById(catId);
