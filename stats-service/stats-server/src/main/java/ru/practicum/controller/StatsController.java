@@ -3,7 +3,7 @@ package ru.practicum.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.EndpointHitDto;
 import ru.practicum.ViewStatsDto;
@@ -14,13 +14,13 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@Validated
 @RequiredArgsConstructor
 public class StatsController {
     public static final String DATE_TIME = "yyyy-MM-dd HH:mm:ss";
     private final StatsService statsService;
 
     @PostMapping("/hit")
+    @ResponseStatus(HttpStatus.CREATED)
     public void add(@RequestBody EndpointHitDto endpointHitDto) {
         log.info("Entry created {}", endpointHitDto.toString());
         statsService.add(endpointHitDto);

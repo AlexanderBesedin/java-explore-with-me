@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.EndpointHitDto;
 import ru.practicum.ViewStatsDto;
+import ru.practicum.exception.ValidationException;
 import ru.practicum.mapper.HitMapper;
 import ru.practicum.model.EndpointHit;
 import ru.practicum.repository.StatsRepository;
@@ -27,12 +28,10 @@ public class StatsServiceImpl implements StatsService {
     @Override
     @Transactional(readOnly = true)
     public List<ViewStatsDto> get(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
-        if (uris != null) {
-            return (unique) ? statsRepository.findUniqueStats(start, end, uris) :
-                    statsRepository.findStats(start, end, uris);
-        } else {
-            return (unique) ? statsRepository.findUniqueStats(start, end) :
-                    statsRepository.findStats(start, end);
+        if (start == null || end == null || start.isAfter(end)) {
+            throw new ValidationException("Invalid date range");
         }
+        return (unique) ? statsRepository.findUniqueStats(start, end, uris) :
+                          statsRepository.findStats(start, end, uris);
     }
 }

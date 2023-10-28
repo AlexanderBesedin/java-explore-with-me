@@ -10,11 +10,14 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
 @Service
 public class StatsClient extends BaseClient {
+    private final DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     public StatsClient(@Value("${stats-server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(
                 builder
@@ -30,7 +33,7 @@ public class StatsClient extends BaseClient {
 
     public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
         String encodeStartTime = URLEncoder.encode(start.toString(), StandardCharsets.UTF_8);
-        String encodeEndTime = URLEncoder.encode(end.toString(), StandardCharsets.UTF_8);
+        String encodeEndTime = URLEncoder.encode(start.toString(), StandardCharsets.UTF_8);
         Map<String, Object> parameters = Map.of(
                 "start", encodeStartTime,
                 "end", encodeEndTime,
