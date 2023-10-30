@@ -1,6 +1,5 @@
 package ru.practicum.compilation.model;
 
-import lombok.Builder;
 import lombok.Data;
 import ru.practicum.event.model.Event;
 
@@ -9,12 +8,11 @@ import java.util.Set;
 
 @Data
 @Entity
-@Builder
 @Table(name = "compilations")
 public class Compilation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "compilation_id")
     private Long id;
     @Column(name = "title")
     private String title;

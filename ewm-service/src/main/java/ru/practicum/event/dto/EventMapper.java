@@ -1,52 +1,23 @@
 package ru.practicum.event.dto;
 
-import ru.practicum.category.dto.CategoryMapper;
-import ru.practicum.event.location.LocationMapper;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
+import ru.practicum.category.model.Category;
 import ru.practicum.event.model.Event;
-import ru.practicum.user.dto.UserMapper;
+import ru.practicum.event.location.Location;
 
-public class EventMapper {
-    public static Event fromDto(EventNewDto eventNewDto) {
-        return Event.builder()
-                .annotation(eventNewDto.getAnnotation())
-                .description(eventNewDto.getDescription())
-                .eventDate(eventNewDto.getEventDate())
-                .location(LocationMapper.fromDto(eventNewDto.getLocation()))
-                .paid(eventNewDto.getPaid())
-                .participantLimit(eventNewDto.getParticipantLimit())
-                .requestModeration(eventNewDto.getRequestModeration())
-                .title(eventNewDto.getTitle())
-                .build();
-    }
+@Mapper
+public interface EventMapper {
+    EventMapper INSTANCE = Mappers.getMapper(EventMapper.class);
 
-    public static EventFullDto toFullDto(Event event) {
-        return EventFullDto.builder()
-                .id(event.getId())
-                .annotation(event.getAnnotation())
-                .category(CategoryMapper.toDto(event.getCategory()))
-                .createdOn(event.getCreatedOn())
-                .description(event.getDescription())
-                .eventDate(event.getEventDate())
-                .initiator(UserMapper.toShortDto(event.getInitiator()))
-                .location(LocationMapper.toDto(event.getLocation()))
-                .paid(event.getPaid())
-                .participantLimit(event.getParticipantLimit())
-                .publishedOn(event.getPublishedOn())
-                .requestModeration(event.getRequestModeration())
-                .state(event.getState())
-                .title(event.getTitle())
-                .build();
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "eventDate", source = "dto.eventTimestamp")
+    @Mapping(target = "category", source = "category")
+    @Mapping(target = "location", source = "location")
+    Event fromDto(EventNewDto dto, Category category, Location location);
 
-    public static EventShortDto toShortDto(Event event) {
-        return EventShortDto.builder()
-                .id(event.getId())
-                .annotation(event.getAnnotation())
-                .category(CategoryMapper.toDto(event.getCategory()))
-                .eventDate(event.getEventDate())
-                .initiator(UserMapper.toShortDto(event.getInitiator()))
-                .paid(event.getPaid())
-                .title(event.getTitle())
-                .build();
-    }
+    EventFullDto toFullDto(Event entity);
+
+    EventShortDto toShortDto(Event entity);
 }

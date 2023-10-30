@@ -15,7 +15,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(path = "/admin/compilations")
 @RequiredArgsConstructor
-public class CompilationAdminController {
+public class CompilationControllerAdmin {
     private final CompilationService compilationService;
 
     @PostMapping
@@ -26,7 +26,6 @@ public class CompilationAdminController {
     }
 
     @PatchMapping("/{compId}")
-    @ResponseStatus(HttpStatus.OK)
     public CompilationDto patch(@PathVariable long compId,
                                 @Valid @RequestBody CompilationUpdateRequest compilationUpdateRequest) {
         log.debug("Compilation ID={} update requested", compId);

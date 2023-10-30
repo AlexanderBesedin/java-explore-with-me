@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CompilationNewDto {
-    @NotBlank(message = "{Compilation title must be completed}")
+    @NotBlank
     @Size(max = 50)
     private String title;
     private Boolean pinned;

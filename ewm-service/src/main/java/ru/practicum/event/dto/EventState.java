@@ -1,4 +1,4 @@
-package ru.practicum.event.enums;
+package ru.practicum.event.dto;
 
 public enum EventState {
     PENDING,

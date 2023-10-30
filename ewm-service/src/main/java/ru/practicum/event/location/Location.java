@@ -1,21 +1,19 @@
 package ru.practicum.event.location;
 
-import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
 
 @Data
 @Entity
-@Builder
 @Table(name = "locations")
 public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "location_id")
     private Long id;
-    @Column
+    @Column(name = "lat")
     private float lat;
-    @Column
+    @Column(name = "lon")
     private float lon;
 }

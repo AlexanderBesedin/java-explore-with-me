@@ -1,20 +1,17 @@
 package ru.practicum.category.model;
 
-import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
 
 @Data
-@Builder
 @Entity
 @Table(name = "categories")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "category_id")
     private Long id;
-
-    @Column(unique = true)
+    @Column(name = "name")
     private String name;
 }

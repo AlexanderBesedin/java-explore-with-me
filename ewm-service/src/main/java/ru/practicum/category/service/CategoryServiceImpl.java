@@ -22,30 +22,32 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public CategoryDto create(CategoryDto categoryDto) {
-        Category category = CategoryMapper.fromDto(categoryDto);
-        return CategoryMapper.toDto(categoryRepository.save(category));
+        Category category = CategoryMapper.INSTANCE.fromDto(categoryDto);
+        return CategoryMapper.INSTANCE.toDto(categoryRepository.save(category));
     }
 
     @Override
     @Transactional
     public CategoryDto patch(long catId, CategoryDto categoryDto) {
         Category category = findById(catId);
-        Optional.ofNullable(categoryDto.getName()).ifPresent(category::setName);
-        return CategoryMapper.toDto(categoryRepository.save(category));
-    }
 
-    @Override
-    @Transactional(readOnly = true)
-    public CategoryDto get(long catId) {
-        return CategoryMapper.toDto(findById(catId));
+        Optional.ofNullable(categoryDto.getName()).ifPresent(category::setName);
+
+        return CategoryMapper.INSTANCE.toDto(categoryRepository.save(category));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<CategoryDto> getAll(int from, int size) {
         return categoryRepository.findAll(PageRequest.of(from, size)).getContent().stream()
-                .map(CategoryMapper::toDto)
+                .map(CategoryMapper.INSTANCE::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CategoryDto getById(long catId) {
+        return CategoryMapper.INSTANCE.toDto(findById(catId));
     }
 
     @Override

@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -14,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CompilationUpdateRequest {
-    @NotBlank(message = "{Compilation title must be completed}")
     @Size(max = 50)
     private String title;
     private Boolean pinned;

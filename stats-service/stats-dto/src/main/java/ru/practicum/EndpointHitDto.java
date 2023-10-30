@@ -17,12 +17,12 @@ import java.time.LocalDateTime;
 public class EndpointHitDto {
     private Long id;
     @NotBlank
-    private String app; // Идентификатор сервиса, для которого записывается информация
+    private String app; //Идентификатор сервиса для которого записывается информация
     @NotBlank
-    private String uri; // URI для, которого был осуществлен запрос
+    private String uri; //URI для которого был осуществлен запрос
     @NotBlank
-    private String ip;  // IP-адрес пользователя, осуществившего запрос
+    private String ip;  //IP-адрес пользователя, осуществившего запрос
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime timestamp; // Дата и время, когда был совершен запрос к эндпоинту (в формате "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime timestamp; //Дата и время, когда был совершен запрос к эндпоинту (в формате "yyyy-MM-dd HH:mm:ss")
 }

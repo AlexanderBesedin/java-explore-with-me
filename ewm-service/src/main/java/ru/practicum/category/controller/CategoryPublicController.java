@@ -10,17 +10,17 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/categories")
 @RequiredArgsConstructor
-@Slf4j
 public class CategoryPublicController {
     private final CategoryService categoryService;
 
     @GetMapping("/{catId}")
     public CategoryDto getById(@PathVariable long catId) {
         log.debug("Received category with ID = {}", catId);
-        return categoryService.get(catId);
+        return categoryService.getById(catId);
     }
 
     @GetMapping

@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.user.dto.UserDto;
 import ru.practicum.user.service.UserService;
+import ru.practicum.user.dto.UserDto;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -13,9 +13,9 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequiredArgsConstructor
 @RequestMapping(path = "/admin/users")
-public class UserController {
+@RequiredArgsConstructor
+public class UserAdminController {
     private final UserService userService;
 
     @PostMapping
@@ -36,7 +36,7 @@ public class UserController {
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long userId) {
-        log.debug("User with ID = {} deleted.", userId);
+        log.debug("User with ID = {} deleted", userId);
         userService.delete(userId);
     }
 }

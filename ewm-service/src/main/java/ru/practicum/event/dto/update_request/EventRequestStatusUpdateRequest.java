@@ -1,4 +1,4 @@
-package ru.practicum.event.dto;
+package ru.practicum.event.dto.update_request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,8 +13,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventRequestStatusUpdateRequest {
+
     @NotNull
     private List<Long> requestIds;
+
     @NotNull
     private EventRequestStatusUpdateRequest.StateAction status;
 

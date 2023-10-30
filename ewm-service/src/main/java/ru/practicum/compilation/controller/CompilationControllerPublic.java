@@ -10,11 +10,11 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping(path = "/compilations")
 @RequiredArgsConstructor
-@Slf4j
-public class CompilationPublicController {
+public class CompilationControllerPublic {
     private final CompilationService compilationService;
 
     @GetMapping

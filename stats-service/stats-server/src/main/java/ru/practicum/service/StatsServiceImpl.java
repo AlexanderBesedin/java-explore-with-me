@@ -6,8 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.EndpointHitDto;
 import ru.practicum.ViewStatsDto;
 import ru.practicum.exception.ValidationException;
-import ru.practicum.mapper.HitMapper;
-import ru.practicum.model.EndpointHit;
+import ru.practicum.mapper.EndpointHitMapper;
 import ru.practicum.repository.StatsRepository;
 
 import java.time.LocalDateTime;
@@ -20,18 +19,17 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     @Transactional
-    public void add(EndpointHitDto endpointHitDto) {
-        EndpointHit hit = HitMapper.toEndpointHit(endpointHitDto);
-        statsRepository.save(hit);
+    public void addHit(EndpointHitDto endpointHitDto) {
+        statsRepository.save(EndpointHitMapper.fromDto(endpointHitDto));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ViewStatsDto> get(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
+    public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
         if (start == null || end == null || start.isAfter(end)) {
-            throw new ValidationException("Invalid date range");
+            throw new ValidationException("Invalid date range OR 'start' or 'end' is null");
         }
         return (unique) ? statsRepository.findUniqueStats(start, end, uris) :
-                          statsRepository.findStats(start, end, uris);
+                statsRepository.findStats(start, end, uris);
     }
 }

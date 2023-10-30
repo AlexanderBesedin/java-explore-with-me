@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.service.EventService;
-import ru.practicum.util.DateConstant;
+import ru.practicum.util.DateConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -19,17 +19,15 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/events")
 @RequiredArgsConstructor
-public class EventControllerPublic {
+public class EventPublicController {
     private final EventService eventService;
 
     @GetMapping
-    public List<EventShortDto> getAllByFilters(@RequestParam(defaultValue = "") String text,
+    public List<EventShortDto> getAll(@RequestParam(defaultValue = "") String text,
                                       @RequestParam(required = false) List<Long> categories,
                                       @RequestParam(required = false) Boolean paid,
-                                      @RequestParam(required = false)
-                                      @DateTimeFormat(pattern = DateConstant.DATE_FORMAT) LocalDateTime rangeStart,
-                                      @RequestParam(required = false)
-                                      @DateTimeFormat(pattern = DateConstant.DATE_FORMAT) LocalDateTime rangeEnd,
+                                      @RequestParam(required = false) @DateTimeFormat(pattern = DateConstants.DATE_FORMAT) LocalDateTime rangeStart,
+                                      @RequestParam(required = false) @DateTimeFormat(pattern = DateConstants.DATE_FORMAT) LocalDateTime rangeEnd,
                                       @RequestParam(defaultValue = "false") boolean onlyAvailable,
                                       @RequestParam(defaultValue = "VIEWS") SortMode sort,
                                       @Valid @RequestParam(defaultValue = "0") @Min(0) int from,

@@ -1,18 +1,18 @@
-package ru.practicum.participation.service;
+package ru.practicum.participationRequest.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.event.enums.EventState;
+import ru.practicum.event.dto.EventState;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
-import ru.practicum.participation.dto.ParticipationDto;
-import ru.practicum.participation.dto.ParticipationMapper;
-import ru.practicum.participation.enums.ParticipationState;
-import ru.practicum.participation.model.Participation;
-import ru.practicum.participation.repository.ParticipationRepository;
+import ru.practicum.participationRequest.dto.ParticipationRequestDto;
+import ru.practicum.participationRequest.dto.ParticipationRequestMapper;
+import ru.practicum.participationRequest.dto.ParticipationRequestState;
+import ru.practicum.participationRequest.model.ParticipationRequest;
+import ru.practicum.participationRequest.repository.ParticipationRequestRepository;
 import ru.practicum.user.model.User;
 import ru.practicum.user.repository.UserRepository;
 
@@ -22,14 +22,14 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ParticipationServiceImpl implements ParticipationService {
-    private final ParticipationRepository participationRepository;
+public class ParticipationRequestServiceImpl implements ParticipationRequestService {
+    private final ParticipationRequestRepository participationRepository;
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
 
     @Override
     @Transactional
-    public ParticipationDto create(long userId, long eventId) {
+    public ParticipationRequestDto create(long userId, long eventId) {
         User requester = findUserById(userId);
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Event with id=" + eventId + " was not found"));
@@ -43,43 +43,45 @@ public class ParticipationServiceImpl implements ParticipationService {
         }
 
         if (event.getParticipantLimit() > 0) {
-            if (event.getParticipantLimit() <= participationRepository.countByEventIdAndStatus(eventId, ParticipationState.CONFIRMED)) {
+            if (event.getParticipantLimit()
+                    <= participationRepository.countByEventIdAndStatus(eventId, ParticipationRequestState.CONFIRMED)) {
                 throw new ConflictException("The number of participation requests has exceeded the limit for the event");
             }
         }
 
-        Participation participation = new Participation();
-        participation.setRequester(requester);
-        participation.setEvent(event);
-        participation.setCreated(LocalDateTime.now());
-        participation.setStatus(event.getRequestModeration() && !event.getParticipantLimit().equals(0) ?
-                ParticipationState.PENDING : ParticipationState.CONFIRMED);
+        ParticipationRequest participationRequest = new ParticipationRequest();
+        participationRequest.setRequester(requester);
+        participationRequest.setEvent(event);
+        participationRequest.setCreated(LocalDateTime.now());
+        participationRequest.setStatus(event.getRequestModeration() && !event.getParticipantLimit().equals(0) ?
+                ParticipationRequestState.PENDING : ParticipationRequestState.CONFIRMED);
 
-        return ParticipationMapper.toDto(participationRepository.save(participation));
+        return ParticipationRequestMapper.INSTANCE.toDto(participationRepository.save(participationRequest));
     }
 
     @Override
     @Transactional
-    public ParticipationDto patch(long userId, long requestId) {
+    public ParticipationRequestDto patch(long userId, long requestId) {
         findUserById(userId);
-        Participation participation = participationRepository.findById(requestId)
+        ParticipationRequest participationRequest = participationRepository.findById(requestId)
                 .orElseThrow(
                         () -> new NotFoundException("Participation request with id=" + requestId + " was not found"));
 
-        if (!participation.getRequester().getId().equals(userId)) {
+        if (!participationRequest.getRequester().getId().equals(userId)) {
             throw new NotFoundException("No events available for editing were found");
         }
-        participation.setStatus(ParticipationState.CANCELED);
 
-        return ParticipationMapper.toDto(participationRepository.save(participation));
+        participationRequest.setStatus(ParticipationRequestState.CANCELED);
+
+        return ParticipationRequestMapper.INSTANCE.toDto(participationRepository.save(participationRequest));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ParticipationDto> getAll(long userId) {
+    public List<ParticipationRequestDto> getAll(long userId) {
         findUserById(userId);
         return participationRepository.findAllByRequesterId(userId).stream()
-                .map(ParticipationMapper::toDto)
+                .map(ParticipationRequestMapper.INSTANCE::toDto)
                 .collect(Collectors.toList());
     }
 

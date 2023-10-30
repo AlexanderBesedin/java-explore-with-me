@@ -9,10 +9,10 @@ import ru.practicum.category.service.CategoryService;
 
 import javax.validation.Valid;
 
+@Slf4j
 @RestController
 @RequestMapping(path = "/admin/categories")
 @RequiredArgsConstructor
-@Slf4j
 public class CategoryAdminController {
     private final CategoryService categoryService;
 
@@ -24,7 +24,6 @@ public class CategoryAdminController {
     }
 
     @PatchMapping("/{catId}")
-    @ResponseStatus(code = HttpStatus.OK)
     public CategoryDto patch(@PathVariable long catId,
                              @Valid @RequestBody CategoryDto categoryDto) {
         log.debug("Category with ID = {} updated", catId);

@@ -4,19 +4,25 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.event.dto.*;
+import ru.practicum.event.dto.update_request.EventRequestStatusUpdateRequest;
+import ru.practicum.event.dto.update_request.EventRequestStatusUpdateResult;
+import ru.practicum.event.dto.update_request.EventUpdateUserRequest;
+import ru.practicum.event.dto.EventFullDto;
+import ru.practicum.event.dto.EventNewDto;
+import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.service.EventService;
-import ru.practicum.participation.dto.ParticipationDto;
+import ru.practicum.participationRequest.dto.ParticipationRequestDto;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
 
+
+@Slf4j
 @RestController
 @RequestMapping(path = "/users/{userId}/events")
 @RequiredArgsConstructor
-@Slf4j
-public class EventControllerPrivate {
+public class EventPrivateController {
     private final EventService eventService;
 
     @PostMapping
@@ -51,8 +57,8 @@ public class EventControllerPrivate {
     }
 
     @GetMapping("/{eventId}/requests")
-    public List<ParticipationDto> getParticipationByInitiator(@PathVariable long userId,
-                                                              @PathVariable long eventId) {
+    public List<ParticipationRequestDto> getParticipationByInitiator(@PathVariable long userId,
+                                                                     @PathVariable long eventId) {
         log.debug("initiator ID={} views requests to participate in the event ID={}", userId, eventId);
         return eventService.getParticipationRequestsByInitiator(userId, eventId);
     }

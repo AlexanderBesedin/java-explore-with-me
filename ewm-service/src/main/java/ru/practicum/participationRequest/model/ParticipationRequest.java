@@ -1,10 +1,8 @@
-package ru.practicum.participation.model;
+package ru.practicum.participationRequest.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import ru.practicum.event.model.Event;
-import ru.practicum.participation.enums.ParticipationState;
+import ru.practicum.participationRequest.dto.ParticipationRequestState;
 import ru.practicum.user.model.User;
 
 import javax.persistence.*;
@@ -12,23 +10,25 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "participation")
-@AllArgsConstructor
-@NoArgsConstructor
-public class Participation {
+@Table(name = "participation_requests")
+public class ParticipationRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "participation_request_id")
     private Long id;
+
     @ManyToOne
-    @JoinColumn(name = "requester_id")
+    @JoinColumn(name = "participation_user_id")
     private User requester;
+
     @ManyToOne
-    @JoinColumn(name = "event_id")
+    @JoinColumn(name = "participation_event_id")
     private Event event;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private ParticipationState status;
+    private ParticipationRequestState status;
+
     @Column(name = "created_date")
     private LocalDateTime created;
 }

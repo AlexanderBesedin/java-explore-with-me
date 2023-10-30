@@ -1,17 +1,13 @@
 package ru.practicum.event.location;
 
-public class LocationMapper {
-    public static Location fromDto(LocationDto locationDto) {
-        return Location.builder()
-                .lat(locationDto.getLat())
-                .lon(locationDto.getLon())
-                .build();
-    }
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
-    public static LocationDto toDto(Location location) {
-        return LocationDto.builder()
-                .lat(location.getLat())
-                .lon(location.getLon())
-                .build();
-    }
+@Mapper
+public interface LocationMapper {
+    LocationMapper INSTANCE = Mappers.getMapper(LocationMapper.class);
+
+    LocationDto toDto(Location entity);
+
+    Location fromDto(LocationDto dto);
 }
