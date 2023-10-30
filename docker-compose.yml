@@ -1,5 +1,29 @@
 version: '3.1'
 services:
+  ewm-service:
+    build: ewm-service
+    image: ewm_service_image
+    container_name: ewm_container
+    ports:
+      - "8080:8080"
+    depends_on:
+      - ewm-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm
+      - SPRING_DATASOURCE_USERNAME=ewmSrv
+      - SPRING_DATASOURCE_PASSWORD=ewmSrv
+      - STATS_SERVER_URL=http://stats-server:9090
+
+  ewm-db:
+    image: postgres:latest
+    container_name: ewm_db
+    ports:
+      - "6542:5432"
+    environment:
+      - POSTGRES_DB=ewm
+      - POSTGRES_USER=ewmSrv
+      - POSTGRES_PASSWORD=ewmSrv
+
   stats-server:
     build: stats-service/stats-server
     image: stats_server_image
@@ -22,27 +46,3 @@ services:
       - POSTGRES_DB=stats
       - POSTGRES_USER=statsSrv
       - POSTGRES_PASSWORD=statsSrv
-
-  ewm-service:
-    build: ewm-service
-    image: ewm_service_image
-    container_name: ewm_container
-    ports:
-      - "8080:8080"
-    depends_on:
-      - ewm-db
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://main-db:5432/ewm
-      - SPRING_DATASOURCE_USERNAME=ewmSrv
-      - SPRING_DATASOURCE_PASSWORD=ewmSrv
-      - STATS_SERVER_URL=http://stats-server:9090
-
-  ewm-db:
-    image: postgres:latest
-    container_name: ewm_db
-    ports:
-      - "6542:5432"
-    environment:
-      - POSTGRES_DB=ewm
-      - POSTGRES_USER=ewmSrv
-      - POSTGRES_PASSWORD=ewmSrv

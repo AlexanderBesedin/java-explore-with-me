@@ -3,8 +3,8 @@ package ru.practicum.mapper;
 import ru.practicum.EndpointHitDto;
 import ru.practicum.model.EndpointHit;
 
-public class HitMapper {
-    public static EndpointHit toEndpointHit(EndpointHitDto dto) {
+public class EndpointHitMapper {
+    public static EndpointHit fromDto(EndpointHitDto dto) {
         return EndpointHit.builder()
                 .id(dto.getId())
                 .app(dto.getApp())
