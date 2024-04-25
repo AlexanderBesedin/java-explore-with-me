@@ -82,6 +82,17 @@ public class ErrorHandlers {
     }
 
     @ExceptionHandler
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ApiError handleForbiddenException(ForbiddenException e) {
+        return ApiError.builder()
+                .status(HttpStatus.FORBIDDEN)
+                .reason("The required action forbidden.")
+                .message(e.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiError handleUnhandled(Exception e) {
         return ApiError.builder()
